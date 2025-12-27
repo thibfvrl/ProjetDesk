@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import theme from "./src/theme";
 import {
@@ -128,12 +129,33 @@ function HomeScreen() {
   );
 }
 
+// Fallback remote logo (placeholder). Replace with local asset by setting
+// `const logoSource = require('./assets/logo.png')` if you add the file.
+const logoSource = require("./assets/logo_desk.png");
 function CartScreen() {
   return (
     <View style={styles.container}>
-      <Text style={{ color: theme.colors.text, padding: 16 }}>
-        Votre panier est vide.
-      </Text>
+      <View style={styles.content}>
+        <Text
+          style={{
+            color: theme.colors.text,
+            padding: 16,
+            fontSize: 16,
+            fontWeight: "600",
+          }}
+        >
+          Votre panier est vide.
+        </Text>
+        <Button
+          mode="contained"
+          onPress={() =>
+            navigationRef.isReady() && navigationRef.navigate("Home")
+          }
+          style={{ alignSelf: "flex-start", margin: 16 }}
+        >
+          Retour à l'accueil
+        </Button>
+      </View>
     </View>
   );
 }
@@ -141,9 +163,27 @@ function CartScreen() {
 function AccountScreen() {
   return (
     <View style={styles.container}>
-      <Text style={{ color: theme.colors.text, padding: 16 }}>
-        Zone Compte utilisateur.
-      </Text>
+      <View style={styles.content}>
+        <Text
+          style={{
+            color: theme.colors.text,
+            padding: 16,
+            fontSize: 16,
+            fontWeight: "600",
+          }}
+        >
+          Zone Compte utilisateur.
+        </Text>
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigationRef.isReady() && navigationRef.navigate("Home")
+          }
+          style={{ alignSelf: "flex-start", margin: 16 }}
+        >
+          Retour à l'accueil
+        </Button>
+      </View>
     </View>
   );
 }
@@ -151,9 +191,27 @@ function AccountScreen() {
 function NotificationsScreen() {
   return (
     <View style={styles.container}>
-      <Text style={{ color: theme.colors.text, padding: 16 }}>
-        Aucune notification.
-      </Text>
+      <View style={styles.content}>
+        <Text
+          style={{
+            color: theme.colors.text,
+            padding: 16,
+            fontSize: 16,
+            fontWeight: "600",
+          }}
+        >
+          Aucune notification.
+        </Text>
+        <Button
+          mode="outlined"
+          onPress={() =>
+            navigationRef.isReady() && navigationRef.navigate("Home")
+          }
+          style={{ alignSelf: "flex-start", margin: 16 }}
+        >
+          Retour à l'accueil
+        </Button>
+      </View>
     </View>
   );
 }
@@ -163,25 +221,49 @@ export default function App() {
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.safeArea}>
         <Appbar.Header style={styles.appbarHeader}>
-          <Appbar.Content title="10 12 14 Desk" titleStyle={styles.appTitle} />
-          <Appbar.Action
-            icon="cart"
-            onPress={() =>
-              navigationRef.isReady() && navigationRef.navigate("Cart")
-            }
-          />
-          <Appbar.Action
-            icon="account"
-            onPress={() =>
-              navigationRef.isReady() && navigationRef.navigate("Account")
-            }
-          />
-          <Appbar.Action
-            icon="bell"
-            onPress={() =>
-              navigationRef.isReady() && navigationRef.navigate("Notifications")
-            }
-          />
+          <View style={styles.appbarLeft}>
+            <TouchableOpacity
+              onPress={() =>
+                navigationRef.isReady() && navigationRef.navigate("Home")
+              }
+              accessibilityLabel="App logo - go to Home"
+              style={styles.logoButton}
+            >
+              {/* If you add your actual logo to ./assets/logo.png it will appear here */}
+              <Image
+                source={logoSource}
+                style={styles.appLogo}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+            <Appbar.Content
+              title="10 12 14 Desk"
+              titleStyle={styles.appTitleLeft}
+              style={styles.appbarContent}
+            />
+          </View>
+
+          <View style={styles.appbarRight}>
+            <Appbar.Action
+              icon="cart"
+              onPress={() =>
+                navigationRef.isReady() && navigationRef.navigate("Cart")
+              }
+            />
+            <Appbar.Action
+              icon="account"
+              onPress={() =>
+                navigationRef.isReady() && navigationRef.navigate("Account")
+              }
+            />
+            <Appbar.Action
+              icon="bell"
+              onPress={() =>
+                navigationRef.isReady() &&
+                navigationRef.navigate("Notifications")
+              }
+            />
+          </View>
         </Appbar.Header>
 
         <NavigationContainer ref={navigationRef}>
@@ -287,12 +369,37 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   appbarHeader: {
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: theme.colors.surface,
   },
   appbarContent: {
     alignItems: "center",
+  },
+  appbarLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  appbarRight: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  appLogo: {
+    width: 40,
+    height: 40,
+    marginLeft: 8,
+  },
+  logoButton: {
+    marginLeft: 6,
+    marginRight: 8,
+  },
+  appTitleLeft: {
+    color: theme.colors.primary,
+    fontSize: 20,
+    fontWeight: "700",
+    marginLeft: 6,
+    textAlign: "left",
   },
   introContainer: {
     paddingHorizontal: 16,

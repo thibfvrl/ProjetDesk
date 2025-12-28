@@ -3,21 +3,19 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  ScrollView,
   Image,
-  Dimensions,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import theme from "./src/theme";
 import {
   Provider as PaperProvider,
   Appbar,
-  TextInput,
-  Button,
-  List,
-  Checkbox,
-  HelperText,
   Text,
+  Button,
+  IconButton,
+  Card,
+  Slider, // <- si Slider n'existe pas chez toi, lis la note sous le code
 } from "react-native-paper";
 import {
   NavigationContainer,
@@ -28,130 +26,193 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const navigationRef = createNavigationContainerRef();
 const Tab = createBottomTabNavigator();
 
+const logoSource = require("./assets/logo_desk.png");
+
+// Tu peux remplacer par ton image locale si tu en as une
+// const deskImage = require("./assets/desk.png");
+const deskImage = {
+  uri: "https://images.unsplash.com/photo-1616627986047-49bb82a651c3?auto=format&fit=crop&w=1200&q=80",
+};
+
 function HomeScreen() {
-  // moved hooks and handlers inside the component
-  const [tasks, setTasks] = React.useState([]);
-  const [newTask, setNewTask] = React.useState("");
-  const [showError, setShowError] = React.useState(false);
-
-  const handleAddTask = () => {
-    if (!newTask.trim()) {
-      setShowError(true); // show error under the field
-      return;
-    }
-    setTasks((prev) => [
-      ...prev,
-      { id: Date.now().toString(), text: newTask.trim(), completed: false },
-    ]);
-    setNewTask("");
-    setShowError(false); // clear error on successful add
-  };
-
-  const handleToggleTask = (id) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  };
-
   return (
-    <View style={styles.container}>
-      {/* Intro text */}
-      <View style={styles.introContainer}>
-        <Text style={styles.introTitle}>Bienvenue sur 10 12 14 Desk</Text>
-        <Text style={styles.introText}>
-          10 12 14 Desk est une plateforme de vente dédiée aux bureaux haut de
-          gamme. Les clients peuvent visualiser des modèles en 3D, personnaliser
-          les matériaux, couleurs et dimensions, et prévisualiser leur choix en
-          temps réel avant d'acheter. Nous proposons également des options de
-          livraison et d'installation pour un service complet.
-        </Text>
+    <View style={styles.screen}>
+      {/* Marque */}
+      <View style={styles.brandBlock}>
+        <Image source={logoSource} style={styles.brandLogo} resizeMode="contain" />
       </View>
-      {/* Carousel */}
-      <View style={styles.carouselContainer}>
-        <Carousel />
-      </View>
-      {/* Main content under the app bar */}
-      <View style={styles.content}>
-        {/* Input row */}
-        <View style={styles.inputRow}>
-          <TextInput
-            mode="outlined"
-            label="Add a new task" //Accessibility Prompt
-            style={styles.textInput}
-            value={newTask}
-            onChangeText={setNewTask}
-          />
+
+      {/* Card produit */}
+      <View style={styles.centerWrap}>
+        <View style={styles.heroCard}>
+          <View style={styles.heroImageWrap}>
+            <Image source={deskImage} style={styles.heroImage} resizeMode="cover" />
+          </View>
+
+          <Text style={styles.productTitle}>Gaming Desk</Text>
+          <Text style={styles.productPrice}>$299</Text>
 
           <Button
             mode="contained"
-            style={styles.addButton}
-            onPress={handleAddTask}
+            onPress={() => navigationRef.isReady() && navigationRef.navigate("Cart")}
+            contentStyle={{ height: 52 }}
+            style={styles.buyButton}
+            labelStyle={styles.buyButtonLabel}
           >
-            Add
+            BUY NOW
           </Button>
+
+          <TouchableOpacity
+            onPress={() =>
+              navigationRef.isReady() && navigationRef.navigate("DeskControl")
+            }
+            style={styles.smallLink}
+            accessibilityLabel="Go to Desk Control"
+          >
+            <Text style={styles.smallLinkText}>Go to Desk Control →</Text>
+          </TouchableOpacity>
         </View>
-        <View style={{ marginBottom: 8 }}>
-          <HelperText type="error" visible={showError}>
-            Task cannot be empty.
-          </HelperText>
-        </View>
-        {/* List area */}
-        <List.Section>
-          <List.Subheader style={{ color: theme.colors.text }}>
-            Today's tasks
-          </List.Subheader>
-          {tasks.map((task) => (
-            <List.Item
-              key={task.id}
-              title={task.text}
-              titleStyle={
-                task.completed
-                  ? { textDecorationLine: "line-through", color: "#444" }
-                  : { color: theme.colors.text }
-              }
-              left={(props) => (
-                <View style={styles.checkboxWrapper}>
-                  <Checkbox
-                    {...props}
-                    status={task.completed ? "checked" : "unchecked"}
-                    onPress={() => handleToggleTask(task.id)}
-                    color={theme.colors.secondary}
-                  />
-                </View>
-              )}
-            />
-          ))}
-        </List.Section>
       </View>
     </View>
   );
 }
 
-// Fallback remote logo (placeholder). Replace with local asset by setting
-// `const logoSource = require('./assets/logo.png')` if you add the file.
-const logoSource = require("./assets/logo_desk.png");
+function DeskControlScreen() {
+  const [lightingColor, setLightingColor] = React.useState("#35E0FF");
+  const [heightIn, setHeightIn] = React.useState(30);
+  const [audioOn, setAudioOn] = React.useState(true);
+
+  const swatches = [
+    "#35E0FF", // cyan
+    "#7C4DFF", // purple
+    "#FF4FD8", // pink
+    "#FFB300", // amber
+    "#40FF8A", // green
+  ];
+
+  return (
+    <View style={styles.screen}>
+      <View style={styles.controlHeader}>
+        <Text style={styles.controlTitle}>Desk Control</Text>
+      </View>
+
+      <View style={styles.controlStack}>
+        {/* Lighting */}
+        <Card style={styles.glassCard} mode="contained">
+          <Card.Content style={styles.cardContentRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Lighting</Text>
+              <Text style={styles.cardSub}>
+                Choose an LED color for your desk.
+              </Text>
+
+              <View style={styles.swatchRow}>
+                {swatches.map((c) => (
+                  <TouchableOpacity
+                    key={c}
+                    onPress={() => setLightingColor(c)}
+                    style={[
+                      styles.swatch,
+                      {
+                        backgroundColor: c,
+                        borderColor:
+                          lightingColor === c ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.15)",
+                        transform: [{ scale: lightingColor === c ? 1.07 : 1 }],
+                      },
+                    ]}
+                    accessibilityLabel={`Select color ${c}`}
+                  />
+                ))}
+              </View>
+            </View>
+
+            {/* Cercle type "wheel" (simplifié mais propre + fonctionnel) */}
+            <View style={styles.colorRingWrap}>
+              <View style={styles.colorRingOuter}>
+                <View
+                  style={[
+                    styles.colorRingInner,
+                    { backgroundColor: lightingColor },
+                  ]}
+                />
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
+
+        {/* Height */}
+        <Card style={styles.glassCard} mode="contained">
+          <Card.Content>
+            <View style={styles.heightTopRow}>
+              <Text style={styles.cardTitle}>Height</Text>
+              <Text style={styles.heightValue}>{Math.round(heightIn)}in</Text>
+            </View>
+
+            <Slider
+              value={heightIn}
+              onValueChange={setHeightIn}
+              minimumValue={24}
+              maximumValue={48}
+              step={1}
+              style={{ marginTop: 8 }}
+              color={theme.colors.primary}
+            />
+
+            <View style={styles.heightLegendRow}>
+              <Text style={styles.heightLegend}>24in</Text>
+              <Text style={styles.heightLegend}>48in</Text>
+            </View>
+          </Card.Content>
+        </Card>
+
+        {/* Audio */}
+        <Card style={styles.glassCard} mode="contained">
+          <Card.Content style={styles.audioRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Audio</Text>
+              <Text style={styles.cardSub}>
+                {audioOn ? "Sound enabled" : "Sound muted"}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => setAudioOn((v) => !v)}
+              style={styles.audioButton}
+              accessibilityLabel="Toggle audio"
+            >
+              <IconButton
+                icon={audioOn ? "music-note" : "music-note-off"}
+                iconColor={theme.colors.primary}
+                size={28}
+              />
+            </TouchableOpacity>
+          </Card.Content>
+        </Card>
+
+        <Button
+          mode="outlined"
+          onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+          style={{ marginTop: 6, borderColor: "rgba(255,255,255,0.25)" }}
+          textColor={theme.colors.text}
+        >
+          Back to Shop
+        </Button>
+      </View>
+    </View>
+  );
+}
+
 function CartScreen() {
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text
-          style={{
-            color: theme.colors.text,
-            padding: 16,
-            fontSize: 16,
-            fontWeight: "600",
-          }}
-        >
-          Votre panier est vide.
-        </Text>
+    <View style={styles.screen}>
+      <View style={styles.simpleCard}>
+        <Text style={styles.cardTitle}>Cart</Text>
+        <Text style={styles.cardSub}>Votre panier est vide.</Text>
+
         <Button
           mode="contained"
-          onPress={() =>
-            navigationRef.isReady() && navigationRef.navigate("Home")
-          }
-          style={{ alignSelf: "flex-start", margin: 16 }}
+          onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+          style={{ marginTop: 14 }}
         >
           Retour à l'accueil
         </Button>
@@ -162,24 +223,16 @@ function CartScreen() {
 
 function AccountScreen() {
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text
-          style={{
-            color: theme.colors.text,
-            padding: 16,
-            fontSize: 16,
-            fontWeight: "600",
-          }}
-        >
-          Zone Compte utilisateur.
-        </Text>
+    <View style={styles.screen}>
+      <View style={styles.simpleCard}>
+        <Text style={styles.cardTitle}>Account</Text>
+        <Text style={styles.cardSub}>Zone Compte utilisateur.</Text>
+
         <Button
           mode="outlined"
-          onPress={() =>
-            navigationRef.isReady() && navigationRef.navigate("Home")
-          }
-          style={{ alignSelf: "flex-start", margin: 16 }}
+          onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+          style={{ marginTop: 14, borderColor: "rgba(255,255,255,0.25)" }}
+          textColor={theme.colors.text}
         >
           Retour à l'accueil
         </Button>
@@ -190,24 +243,16 @@ function AccountScreen() {
 
 function NotificationsScreen() {
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text
-          style={{
-            color: theme.colors.text,
-            padding: 16,
-            fontSize: 16,
-            fontWeight: "600",
-          }}
-        >
-          Aucune notification.
-        </Text>
+    <View style={styles.screen}>
+      <View style={styles.simpleCard}>
+        <Text style={styles.cardTitle}>Notifications</Text>
+        <Text style={styles.cardSub}>Aucune notification.</Text>
+
         <Button
           mode="outlined"
-          onPress={() =>
-            navigationRef.isReady() && navigationRef.navigate("Home")
-          }
-          style={{ alignSelf: "flex-start", margin: 16 }}
+          onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+          style={{ marginTop: 14, borderColor: "rgba(255,255,255,0.25)" }}
+          textColor={theme.colors.text}
         >
           Retour à l'accueil
         </Button>
@@ -220,6 +265,7 @@ export default function App() {
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle="light-content" />
         <Appbar.Header style={styles.appbarHeader}>
           <View style={styles.appbarLeft}>
             <TouchableOpacity
@@ -229,21 +275,26 @@ export default function App() {
               accessibilityLabel="App logo - go to Home"
               style={styles.logoButton}
             >
-              {/* If you add your actual logo to ./assets/logo.png it will appear here */}
               <Image
                 source={logoSource}
                 style={styles.appLogo}
                 resizeMode="contain"
               />
             </TouchableOpacity>
+
             <Appbar.Content
               title="10 12 14 Desk"
               titleStyle={styles.appTitleLeft}
-              style={styles.appbarContent}
             />
           </View>
 
           <View style={styles.appbarRight}>
+            <Appbar.Action
+              icon="tune-variant"
+              onPress={() =>
+                navigationRef.isReady() && navigationRef.navigate("DeskControl")
+              }
+            />
             <Appbar.Action
               icon="cart"
               onPress={() =>
@@ -274,6 +325,7 @@ export default function App() {
             }}
           >
             <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="DeskControl" component={DeskControlScreen} />
             <Tab.Screen name="Cart" component={CartScreen} />
             <Tab.Screen name="Account" component={AccountScreen} />
             <Tab.Screen name="Notifications" component={NotificationsScreen} />
@@ -284,140 +336,242 @@ export default function App() {
   );
 }
 
-function Carousel() {
-  const images = [
-    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=1200&auto=format&fit=crop&q=80",
-  ];
-  const scrollRef = React.useRef(null);
-  const [index, setIndex] = React.useState(0);
-  const { width } = Dimensions.get("window");
-  const height = 320;
-
-  React.useEffect(() => {
-    const id = setInterval(() => {
-      setIndex((prev) => {
-        const next = (prev + 1) % images.length;
-        if (scrollRef.current) {
-          scrollRef.current.scrollTo({ x: next * width, animated: true });
-        }
-        return next;
-      });
-    }, 3500);
-    return () => clearInterval(id);
-  }, [images.length, width]);
-
-  return (
-    <ScrollView
-      horizontal
-      pagingEnabled
-      showsHorizontalScrollIndicator={false}
-      ref={scrollRef}
-      style={{ width }}
-    >
-      {images.map((uri) => (
-        <Image
-          key={uri}
-          source={{ uri }}
-          style={{ width, height, resizeMode: "cover" }}
-        />
-      ))}
-    </ScrollView>
-  );
-}
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: theme.colors.background, // from Material theme (dark)
+    backgroundColor: theme.colors.background,
   },
-  container: {
+
+  // Fond néon sombre
+  screen: {
     flex: 1,
+    backgroundColor: "#070A16",
+    paddingHorizontal: 18,
+    paddingTop: 14,
   },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  inputRow: {
-    flexDirection: "row",
-    marginBottom: 16,
-  },
-  textInput: {
-    flex: 1,
-    marginRight: 8,
-  },
-  addButton: {
-    justifyContent: "center",
-    borderRadius: 12,
-    height: 48,
-    marginTop: 8,
-  },
-  checkboxWrapper: {
-    borderWidth: 2,
-    borderColor: theme.colors.primary,
-    borderRadius: 4,
-    padding: 1,
-  },
-  appTitle: {
-    color: theme.colors.primary,
-    fontSize: 20,
-    fontWeight: "700",
-    letterSpacing: 1,
-    textShadowColor: theme.colors.primary,
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8,
-    textAlign: "center",
-  },
+
   appbarHeader: {
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: theme.colors.surface,
-  },
-  appbarContent: {
-    alignItems: "center",
+    backgroundColor: "#070A16",
+    elevation: 0,
   },
   appbarLeft: {
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
   },
-  appbarRight: {
+  appbarRight: { flexDirection: "row", alignItems: "center" },
+  appLogo: { width: 36, height: 36, marginLeft: 6 },
+  logoButton: { marginRight: 8 },
+  appTitleLeft: {
+    color: "#6CF0FF",
+    fontSize: 18,
+    fontWeight: "800",
+    letterSpacing: 0.8,
+  },
+
+  // HOME (Shop)
+  brandBlock: {
+    alignItems: "center",
+    marginTop: 6,
+    marginBottom: 14,
+  },
+  brandLogo: {
+    width: 210,
+    height: 70,
+  },
+
+  centerWrap: {
+    flex: 1,
+    justifyContent: "center",
+    paddingBottom: 20,
+  },
+
+  heroCard: {
+    borderRadius: 22,
+    padding: 16,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(120, 220, 255, 0.18)",
+    shadowColor: "#00E5FF",
+    shadowOpacity: 0.12,
+    shadowRadius: 18,
+    elevation: 3,
+  },
+
+  heroImageWrap: {
+    borderRadius: 18,
+    overflow: "hidden",
+    height: 220,
+    backgroundColor: "rgba(0,0,0,0.25)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.08)",
+    marginBottom: 14,
+  },
+  heroImage: {
+    width: "100%",
+    height: "100%",
+  },
+
+  productTitle: {
+    textAlign: "center",
+    color: "#A98CFF",
+    fontSize: 26,
+    fontWeight: "800",
+    marginTop: 2,
+  },
+  productPrice: {
+    textAlign: "center",
+    color: "#FF4FD8",
+    fontSize: 26,
+    fontWeight: "900",
+    marginTop: 8,
+    marginBottom: 14,
+  },
+
+  buyButton: {
+    borderRadius: 16,
+    backgroundColor: "#5B6CFF",
+  },
+  buyButtonLabel: {
+    fontWeight: "900",
+    letterSpacing: 1.2,
+  },
+
+  smallLink: {
+    marginTop: 14,
+    alignItems: "center",
+  },
+  smallLinkText: {
+    color: "rgba(255,255,255,0.7)",
+    fontWeight: "600",
+  },
+
+  // CONTROL
+  controlHeader: {
+    marginTop: 8,
+    marginBottom: 14,
+    alignItems: "center",
+  },
+  controlTitle: {
+    color: "#6CF0FF",
+    fontSize: 28,
+    fontWeight: "900",
+    letterSpacing: 0.8,
+  },
+
+  controlStack: {
+    flex: 1,
+    gap: 14,
+    paddingBottom: 18,
+  },
+
+  glassCard: {
+    borderRadius: 22,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(120, 220, 255, 0.18)",
+    overflow: "hidden",
+  },
+
+  cardContentRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+
+  cardTitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 18,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+  cardSub: {
+    color: "rgba(255,255,255,0.62)",
+    fontSize: 13,
+    fontWeight: "600",
+  },
+
+  swatchRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 12,
+    flexWrap: "wrap",
+  },
+  swatch: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 2,
+  },
+
+  colorRingWrap: {
+    width: 92,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  colorRingOuter: {
+    width: 86,
+    height: 86,
+    borderRadius: 43,
+    borderWidth: 6,
+    borderColor: "rgba(255,255,255,0.14)",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#6CF0FF",
+    shadowOpacity: 0.16,
+    shadowRadius: 14,
+    elevation: 2,
+  },
+  colorRingInner: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.16)",
+  },
+
+  heightTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline",
+  },
+  heightValue: {
+    color: "#6CF0FF",
+    fontSize: 16,
+    fontWeight: "900",
+  },
+  heightLegendRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
+  },
+  heightLegend: {
+    color: "rgba(255,255,255,0.45)",
+    fontWeight: "700",
+  },
+
+  audioRow: {
     flexDirection: "row",
     alignItems: "center",
   },
-  appLogo: {
-    width: 40,
-    height: 40,
-    marginLeft: 8,
-  },
-  logoButton: {
-    marginLeft: 6,
-    marginRight: 8,
-  },
-  appTitleLeft: {
-    color: theme.colors.primary,
-    fontSize: 20,
-    fontWeight: "700",
-    marginLeft: 6,
-    textAlign: "left",
-  },
-  introContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
+  audioButton: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    borderWidth: 1,
+    borderColor: "rgba(120, 220, 255, 0.22)",
+    backgroundColor: "rgba(0,0,0,0.2)",
     alignItems: "center",
+    justifyContent: "center",
   },
-  introTitle: {
-    color: theme.colors.primary,
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 6,
-  },
-  introText: {
-    color: theme.colors.text,
-    textAlign: "center",
-    opacity: 0.9,
-  },
-  carouselContainer: {
-    marginTop: 12,
+
+  // simple screens
+  simpleCard: {
+    marginTop: 18,
+    borderRadius: 22,
+    padding: 16,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(120, 220, 255, 0.18)",
   },
 });

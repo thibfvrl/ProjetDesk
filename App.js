@@ -15,8 +15,10 @@ import {
   Button,
   IconButton,
   Card,
-  Slider, // <- si Slider n'existe pas chez toi, lis la note sous le code
 } from "react-native-paper";
+
+import Slider from "@react-native-community/slider";
+
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -27,9 +29,7 @@ const navigationRef = createNavigationContainerRef();
 const Tab = createBottomTabNavigator();
 
 const logoSource = require("./assets/logo_desk.png");
-
-// Tu peux remplacer par ton image locale si tu en as une
-// const deskImage = require("./assets/desk.png");
+const logoTitle = require("./assets/nom_logoV2.png");
 const deskImage = {
   uri: "https://images.unsplash.com/photo-1616627986047-49bb82a651c3?auto=format&fit=crop&w=1200&q=80",
 };
@@ -37,16 +37,25 @@ const deskImage = {
 function HomeScreen() {
   return (
     <View style={styles.screen}>
-      {/* Marque */}
+      {/* Logo haut */}
       <View style={styles.brandBlock}>
-        <Image source={logoSource} style={styles.brandLogo} resizeMode="contain" />
+        <Image
+          source={logoTitle}
+          style={styles.brandLogoTitle}
+          resizeMode="contain"
+        />
       </View>
+
 
       {/* Card produit */}
       <View style={styles.centerWrap}>
         <View style={styles.heroCard}>
           <View style={styles.heroImageWrap}>
-            <Image source={deskImage} style={styles.heroImage} resizeMode="cover" />
+            <Image
+              source={deskImage}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
           </View>
 
           <Text style={styles.productTitle}>Gaming Desk</Text>
@@ -54,7 +63,9 @@ function HomeScreen() {
 
           <Button
             mode="contained"
-            onPress={() => navigationRef.isReady() && navigationRef.navigate("Cart")}
+            onPress={() =>
+              navigationRef.isReady() && navigationRef.navigate("Cart")
+            }
             contentStyle={{ height: 52 }}
             style={styles.buyButton}
             labelStyle={styles.buyButtonLabel}
@@ -62,15 +73,7 @@ function HomeScreen() {
             BUY NOW
           </Button>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigationRef.isReady() && navigationRef.navigate("DeskControl")
-            }
-            style={styles.smallLink}
-            accessibilityLabel="Go to Desk Control"
-          >
-            <Text style={styles.smallLinkText}>Go to Desk Control →</Text>
-          </TouchableOpacity>
+          {/* ✅ SUPPRIMÉ : plus de lien ici, accès uniquement via bouton en haut à droite */}
         </View>
       </View>
     </View>
@@ -82,13 +85,7 @@ function DeskControlScreen() {
   const [heightIn, setHeightIn] = React.useState(30);
   const [audioOn, setAudioOn] = React.useState(true);
 
-  const swatches = [
-    "#35E0FF", // cyan
-    "#7C4DFF", // purple
-    "#FF4FD8", // pink
-    "#FFB300", // amber
-    "#40FF8A", // green
-  ];
+  const swatches = ["#35E0FF", "#7C4DFF", "#FF4FD8", "#FFB300", "#40FF8A"];
 
   return (
     <View style={styles.screen}>
@@ -102,9 +99,6 @@ function DeskControlScreen() {
           <Card.Content style={styles.cardContentRow}>
             <View style={{ flex: 1 }}>
               <Text style={styles.cardTitle}>Lighting</Text>
-              <Text style={styles.cardSub}>
-                Choose an LED color for your desk.
-              </Text>
 
               <View style={styles.swatchRow}>
                 {swatches.map((c) => (
@@ -116,17 +110,18 @@ function DeskControlScreen() {
                       {
                         backgroundColor: c,
                         borderColor:
-                          lightingColor === c ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.15)",
+                          lightingColor === c
+                            ? "rgba(255,255,255,0.9)"
+                            : "rgba(255,255,255,0.15)",
                         transform: [{ scale: lightingColor === c ? 1.07 : 1 }],
                       },
                     ]}
-                    accessibilityLabel={`Select color ${c}`}
                   />
                 ))}
               </View>
             </View>
 
-            {/* Cercle type "wheel" (simplifié mais propre + fonctionnel) */}
+            {/* Cercle */}
             <View style={styles.colorRingWrap}>
               <View style={styles.colorRingOuter}>
                 <View
@@ -148,15 +143,18 @@ function DeskControlScreen() {
               <Text style={styles.heightValue}>{Math.round(heightIn)}in</Text>
             </View>
 
-            <Slider
-              value={heightIn}
-              onValueChange={setHeightIn}
-              minimumValue={24}
-              maximumValue={48}
-              step={1}
-              style={{ marginTop: 8 }}
-              color={theme.colors.primary}
-            />
+            <View style={{ marginTop: 10 }}>
+              <Slider
+                value={heightIn}
+                onValueChange={setHeightIn}
+                minimumValue={24}
+                maximumValue={48}
+                step={1}
+                minimumTrackTintColor={theme.colors.primary}
+                maximumTrackTintColor={"rgba(255,255,255,0.18)"}
+                thumbTintColor={theme.colors.primary}
+              />
+            </View>
 
             <View style={styles.heightLegendRow}>
               <Text style={styles.heightLegend}>24in</Text>
@@ -178,7 +176,6 @@ function DeskControlScreen() {
             <TouchableOpacity
               onPress={() => setAudioOn((v) => !v)}
               style={styles.audioButton}
-              accessibilityLabel="Toggle audio"
             >
               <IconButton
                 icon={audioOn ? "music-note" : "music-note-off"}
@@ -191,7 +188,9 @@ function DeskControlScreen() {
 
         <Button
           mode="outlined"
-          onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+          onPress={() =>
+            navigationRef.isReady() && navigationRef.navigate("Home")
+          }
           style={{ marginTop: 6, borderColor: "rgba(255,255,255,0.25)" }}
           textColor={theme.colors.text}
         >
@@ -211,7 +210,9 @@ function CartScreen() {
 
         <Button
           mode="contained"
-          onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+          onPress={() =>
+            navigationRef.isReady() && navigationRef.navigate("Home")
+          }
           style={{ marginTop: 14 }}
         >
           Retour à l'accueil
@@ -230,7 +231,9 @@ function AccountScreen() {
 
         <Button
           mode="outlined"
-          onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+          onPress={() =>
+            navigationRef.isReady() && navigationRef.navigate("Home")
+          }
           style={{ marginTop: 14, borderColor: "rgba(255,255,255,0.25)" }}
           textColor={theme.colors.text}
         >
@@ -250,7 +253,9 @@ function NotificationsScreen() {
 
         <Button
           mode="outlined"
-          onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+          onPress={() =>
+            navigationRef.isReady() && navigationRef.navigate("Home")
+          }
           style={{ marginTop: 14, borderColor: "rgba(255,255,255,0.25)" }}
           textColor={theme.colors.text}
         >
@@ -262,17 +267,20 @@ function NotificationsScreen() {
 }
 
 export default function App() {
+  const [routeName, setRouteName] = React.useState("Home");
+
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.safeArea}>
         <StatusBar barStyle="light-content" />
+
+        {/* ✅ Appbar FIXE - le bouton paramètres n’apparaît que sur Home */}
         <Appbar.Header style={styles.appbarHeader}>
           <View style={styles.appbarLeft}>
             <TouchableOpacity
               onPress={() =>
                 navigationRef.isReady() && navigationRef.navigate("Home")
               }
-              accessibilityLabel="App logo - go to Home"
               style={styles.logoButton}
             >
               <Image
@@ -282,19 +290,26 @@ export default function App() {
               />
             </TouchableOpacity>
 
-            <Appbar.Content
-              title="10 12 14 Desk"
-              titleStyle={styles.appTitleLeft}
-            />
+            <View style={styles.brandTitleWrap}>
+              <Text style={styles.brandTitleMain}>10 12 14</Text>
+              <View style={styles.brandBadge}>
+                <Text style={styles.brandBadgeText}>DESK</Text>
+              </View>
+            </View>
           </View>
 
           <View style={styles.appbarRight}>
-            <Appbar.Action
-              icon="tune-variant"
-              onPress={() =>
-                navigationRef.isReady() && navigationRef.navigate("DeskControl")
-              }
-            />
+            {/* ✅ IMPORTANT : paramètres uniquement sur Home */}
+            {routeName === "Home" && (
+              <Appbar.Action
+                icon="tune-variant"
+                onPress={() =>
+                  navigationRef.isReady() &&
+                  navigationRef.navigate("DeskControl")
+                }
+              />
+            )}
+
             <Appbar.Action
               icon="cart"
               onPress={() =>
@@ -317,7 +332,13 @@ export default function App() {
           </View>
         </Appbar.Header>
 
-        <NavigationContainer ref={navigationRef}>
+        <NavigationContainer
+          ref={navigationRef}
+          onStateChange={() => {
+            const current = navigationRef.getCurrentRoute();
+            if (current?.name) setRouteName(current.name);
+          }}
+        >
           <Tab.Navigator
             screenOptions={{
               headerShown: false,
@@ -342,7 +363,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
   },
 
-  // Fond néon sombre
   screen: {
     flex: 1,
     backgroundColor: "#070A16",
@@ -359,9 +379,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
-  appbarRight: { flexDirection: "row", alignItems: "center" },
-  appLogo: { width: 36, height: 36, marginLeft: 6 },
-  logoButton: { marginRight: 8 },
+  appbarRight: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  appLogo: {
+    width: 36,
+    height: 36,
+    marginLeft: 6,
+  },
+  logoButton: {
+    marginRight: 8,
+  },
   appTitleLeft: {
     color: "#6CF0FF",
     fontSize: 18,
@@ -369,7 +398,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
   },
 
-  // HOME (Shop)
+  // HOME
   brandBlock: {
     alignItems: "center",
     marginTop: 6,
@@ -379,13 +408,11 @@ const styles = StyleSheet.create({
     width: 210,
     height: 70,
   },
-
   centerWrap: {
     flex: 1,
     justifyContent: "center",
     paddingBottom: 20,
   },
-
   heroCard: {
     borderRadius: 22,
     padding: 16,
@@ -397,7 +424,6 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     elevation: 3,
   },
-
   heroImageWrap: {
     borderRadius: 18,
     overflow: "hidden",
@@ -411,7 +437,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-
   productTitle: {
     textAlign: "center",
     color: "#A98CFF",
@@ -427,7 +452,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 14,
   },
-
   buyButton: {
     borderRadius: 16,
     backgroundColor: "#5B6CFF",
@@ -435,15 +459,6 @@ const styles = StyleSheet.create({
   buyButtonLabel: {
     fontWeight: "900",
     letterSpacing: 1.2,
-  },
-
-  smallLink: {
-    marginTop: 14,
-    alignItems: "center",
-  },
-  smallLinkText: {
-    color: "rgba(255,255,255,0.7)",
-    fontWeight: "600",
   },
 
   // CONTROL
@@ -458,13 +473,11 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     letterSpacing: 0.8,
   },
-
   controlStack: {
     flex: 1,
     gap: 14,
     paddingBottom: 18,
   },
-
   glassCard: {
     borderRadius: 22,
     backgroundColor: "rgba(255,255,255,0.04)",
@@ -472,13 +485,11 @@ const styles = StyleSheet.create({
     borderColor: "rgba(120, 220, 255, 0.18)",
     overflow: "hidden",
   },
-
   cardContentRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
   },
-
   cardTitle: {
     color: "rgba(255,255,255,0.92)",
     fontSize: 18,
@@ -490,7 +501,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
   },
-
   swatchRow: {
     flexDirection: "row",
     gap: 10,
@@ -503,7 +513,6 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     borderWidth: 2,
   },
-
   colorRingWrap: {
     width: 92,
     alignItems: "center",
@@ -529,7 +538,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.16)",
   },
-
   heightTopRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -549,7 +557,6 @@ const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.45)",
     fontWeight: "700",
   },
-
   audioRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -565,7 +572,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  // simple screens
   simpleCard: {
     marginTop: 18,
     borderRadius: 22,
@@ -574,4 +580,39 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(120, 220, 255, 0.18)",
   },
+  brandTitleWrap: {
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 10,
+},
+
+brandTitleMain: {
+  color: "#6CF0FF",
+  fontSize: 18,
+  fontWeight: "900",
+  letterSpacing: 1.2,
+  textTransform: "uppercase",
+  textShadowColor: "rgba(108, 240, 255, 0.65)",
+  textShadowOffset: { width: 0, height: 0 },
+  textShadowRadius: 10,
+},
+
+brandBadge: {
+  paddingHorizontal: 10,
+  paddingVertical: 4,
+  borderRadius: 999,
+  backgroundColor: "rgba(169, 140, 255, 0.18)",
+  borderWidth: 1,
+  borderColor: "rgba(169, 140, 255, 0.55)",
+},
+
+brandBadgeText: {
+  color: "#A98CFF",
+  fontSize: 12,
+  fontWeight: "900",
+  letterSpacing: 1.6,
+},
+
+
+
 });

@@ -374,14 +374,13 @@ function DeskControlScreen() {
         </Card>
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigationRef.isReady() && navigationRef.navigate("Home")
           }
-          style={{ marginTop: 6, borderColor: "rgba(255,255,255,0.25)" }}
-          textColor={theme.colors.text}
+          style={{ marginTop: 14 }}
         >
-          Back to Shop
+          Go Home
         </Button>
       </View>
     </View>
@@ -407,7 +406,7 @@ function CartScreen() {
 
       {lines.length === 0 ? (
         <View style={styles.simpleCard}>
-          <Text style={styles.cardSub}>Votre panier est vide.</Text>
+          <Text style={styles.cardSub}>Your cart is empty.</Text>
           <Button
             mode="contained"
             onPress={() =>
@@ -415,7 +414,7 @@ function CartScreen() {
             }
             style={{ marginTop: 14 }}
           >
-            Retour à l'accueil
+            Go Home
           </Button>
         </View>
       ) : (
@@ -504,17 +503,16 @@ function AccountScreen() {
     <View style={styles.screen}>
       <View style={styles.simpleCard}>
         <Text style={styles.cardTitle}>Account</Text>
-        <Text style={styles.cardSub}>Zone Compte utilisateur.</Text>
+        <Text style={styles.cardSub}>User Account Area.</Text>
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigationRef.isReady() && navigationRef.navigate("Home")
           }
-          style={{ marginTop: 14, borderColor: "rgba(255,255,255,0.25)" }}
-          textColor={theme.colors.text}
+          style={{ marginTop: 14 }}
         >
-          Retour à l'accueil
+          Go Home
         </Button>
       </View>
     </View>
@@ -526,17 +524,16 @@ function NotificationsScreen() {
     <View style={styles.screen}>
       <View style={styles.simpleCard}>
         <Text style={styles.cardTitle}>Notifications</Text>
-        <Text style={styles.cardSub}>Aucune notification.</Text>
+        <Text style={styles.cardSub}>None notification.</Text>
 
         <Button
-          mode="outlined"
+          mode="contained"
           onPress={() =>
             navigationRef.isReady() && navigationRef.navigate("Home")
           }
-          style={{ marginTop: 14, borderColor: "rgba(255,255,255,0.25)" }}
-          textColor={theme.colors.text}
+          style={{ marginTop: 14 }}
         >
-          Retour à l'accueil
+          Go Home
         </Button>
       </View>
     </View>

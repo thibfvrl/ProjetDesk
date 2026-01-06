@@ -945,7 +945,7 @@ export default function App() {
                 >
                   <Image
                     source={logoSource}
-                    style={styles.appLogo}
+                    style={[styles.appLogo, { borderRadius: 10 }]}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>

@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import {
   SafeAreaView,
@@ -8,6 +9,8 @@ import {
   TouchableOpacity,
   StatusBar,
   ScrollView,
+  Alert,
+
 } from "react-native";
 import theme from "./src/theme";
 
@@ -53,9 +56,13 @@ import {
   Card,
   TextInput,
   HelperText,
+  Menu,
 } from "react-native-paper";
 
+
 function HomeScreen() {
+  const { sortOrder } = React.useContext(SortContext);
+  const { filter } = React.useContext(FilterContext);
   const PRODUCTS = [
     // --- GAMING
     {
@@ -208,14 +215,40 @@ function HomeScreen() {
     },
   ];
 
+      const filteredProducts = React.useMemo(() => {
+    const map = {
+      GAMING: "Gaming Desks",
+      ARTDECO: "Art Deco Desks",
+      WORK: "Work Desks",
+    };
+
+    // 1) Filtre
+    let list = PRODUCTS;
+    if (filter !== "ALL") {
+      list = PRODUCTS.filter((p) => p.category === map[filter]);
+    }
+
+    // 2) Tri
+    const sorted = [...list];
+    if (sortOrder === "ASC") {
+      sorted.sort((a, b) => a.price - b.price);
+    } else if (sortOrder === "DESC") {
+      sorted.sort((a, b) => b.price - a.price);
+    }
+
+    return sorted;
+  }, [filter, sortOrder]);
+
+
   const grouped = React.useMemo(() => {
     const map = new Map();
-    for (const p of PRODUCTS) {
+    for (const p of filteredProducts) {
       if (!map.has(p.category)) map.set(p.category, []);
       map.get(p.category).push(p);
     }
-    return Array.from(map.entries()); // [ [category, products], ... ]
-  }, []);
+    return Array.from(map.entries());
+  }, [filteredProducts]);
+
 
   const ProductCard = ({ item }) => (
     <View style={styles.productCard}>
@@ -1011,67 +1044,97 @@ function NotificationsScreen() {
 
 export default function App() {
   const [routeName, setRouteName] = React.useState("Home");
+  const [filter, setFilter] = React.useState("ALL"); 
+  const [sortOrder, setSortOrder] = React.useState("NONE"); // NONE | ASC | DESC
+  const [filterMenuVisible, setFilterMenuVisible] = React.useState(false);
   const [cartState, dispatch] = React.useReducer(cartReducer, { items: {} });
   const [notifState, notifDispatch] = React.useReducer(notificationsReducer, {
     items: [],
   });
 
   return (
+  <FilterContext.Provider value={{ filter, setFilter }}>
+   <SortContext.Provider value={{ sortOrder, setSortOrder }}>
     <CartContext.Provider value={{ cartState, dispatch }}>
       <PaperProvider theme={theme}>
         <SafeAreaView style={styles.safeArea}>
           <StatusBar barStyle="light-content" />
 
           {/* ✅ Appbar FIXE - le bouton paramètres n’apparaît que sur Home */}
-          <Appbar.Header style={styles.appbarHeader}>
-            <View style={styles.appbarLeft}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigationRef.isReady() && navigationRef.navigate("Home")
-                }
-                style={styles.logoButton}
-              >
-                <Image
-                  source={logoSource}
-                  style={styles.appLogo}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
+         
+         /////////////////////////
+         <Appbar.Header style={styles.appbarHeader}>
+  {/* Barre complète : logo, tri, filtre, puis les 4 icônes */}
+  <View style={styles.topBarRow}>
+    {/* LOGO */}
+    <TouchableOpacity
+      onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+      style={styles.logoButton}
+    >
+      <Image source={logoSource} style={styles.appLogo} resizeMode="contain" />
+    </TouchableOpacity>
 
-              <View style={styles.appbarRight}>
-                {/* ✅ IMPORTANT : afficher le bouton paramètres sur toutes les pages sauf "DeskControl" */}
+    {/* TRI */}
+    <Appbar.Action
+      icon="sort"
+      onPress={() =>
+        Alert.alert("Tri", "Choisis l'ordre", [
+          { text: "Prix croissant", onPress: () => setSortOrder("ASC") },
+          { text: "Prix décroissant", onPress: () => setSortOrder("DESC") },
+          { text: "Aucun tri", onPress: () => setSortOrder("NONE") },
+          { text: "Annuler", style: "cancel" },
+        ])
+      }
+    />
 
-                <Appbar.Action
-                  icon="tune-variant"
-                  onPress={() =>
-                    navigationRef.isReady() &&
-                    navigationRef.navigate("DeskControl")
-                  }
-                />
+{/* FILTRE (Paper) */}
+<Appbar.Action
+  icon="filter-variant"
+  iconColor="rgba(255,255,255,0.90)"
+  size={28}
+  onPress={() =>
+    Alert.alert("Filtrer", "Choisis une catégorie", [
+      { text: "All", onPress: () => setFilter("ALL") },
+      { text: "Gaming", onPress: () => setFilter("GAMING") },
+      { text: "Art Deco", onPress: () => setFilter("ARTDECO") },
+      { text: "Work", onPress: () => setFilter("WORK") },
+      { text: "Annuler", style: "cancel" },
+    ])
+  }
+/>
 
-                <Appbar.Action
-                  icon="cart"
-                  onPress={() =>
-                    navigationRef.isReady() && navigationRef.navigate("Cart")
-                  }
-                />
-                <Appbar.Action
-                  icon="account"
-                  onPress={() =>
-                    navigationRef.isReady() && navigationRef.navigate("Account")
-                  }
-                />
-                <Appbar.Action
-                  icon="bell"
-                  onPress={() =>
-                    navigationRef.isReady() &&
-                    navigationRef.navigate("Notifications")
-                  }
-                />
-              </View>
-            </Appbar.Header>
 
+    {/* ESPACE QUI POUSSE LES 4 ICÔNES À DROITE */}
+    <View style={{ flex: 1 }} />
+
+    {/* DESK CONTROL + AUTRES */}
+    <Appbar.Action
+      icon="tune-variant"
+      onPress={() =>
+        navigationRef.isReady() && navigationRef.navigate("DeskControl")
+      }
+    />
+    <Appbar.Action
+      icon="cart"
+      onPress={() => navigationRef.isReady() && navigationRef.navigate("Cart")}
+    />
+    <Appbar.Action
+      icon="account"
+      onPress={() =>
+        navigationRef.isReady() && navigationRef.navigate("Account")
+      }
+    />
+    <Appbar.Action
+      icon="bell"
+      onPress={() =>
+        navigationRef.isReady() && navigationRef.navigate("Notifications")
+      }
+    />
+  </View>
+</Appbar.Header>
+
+
+////////////////////////////////////////////////
           <NavigationContainer
             ref={navigationRef}
             onStateChange={() => {
@@ -1103,6 +1166,9 @@ export default function App() {
         </SafeAreaView>
       </PaperProvider>
     </CartContext.Provider>
+   </SortContext.Provider>
+  </FilterContext.Provider>
+
   );
 }
 
@@ -1174,10 +1240,11 @@ function ProductDetailsScreen({ route }) {
 
 // Simple auth context (demo only)
 const AuthContext = React.createContext(null);
-
 const CartContext = React.createContext(null);
-
 const NotificationsContext = React.createContext(null);
+const FilterContext = React.createContext(null);
+const SortContext = React.createContext(null);
+
 
 function notificationsReducer(state, action) {
   switch (action.type) {
@@ -1263,11 +1330,21 @@ const styles = StyleSheet.create({
     elevation: 0,
     paddingBottom: 6,
   },
+
+  topBarRow: {
+  flexDirection: "row",
+  alignItems: "center",
+  width: "100%",
+},
+
   appbarLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "flex-start",
+  flex: 1,
+  height: 56,
+},
+
   appbarRight: {
     flexDirection: "row",
     alignItems: "center",
@@ -1280,6 +1357,9 @@ const styles = StyleSheet.create({
   logoButton: {
     marginRight: 8,
   },
+
+
+
   appTitleLeft: {
     color: "#6CF0FF",
     fontSize: 18,

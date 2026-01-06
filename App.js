@@ -559,21 +559,20 @@ function PaymentScreen({ route }) {
     setSubmitted(true);
     if (!canPay) return;
 
-    const orderId = "101214-${Math.floor(100000 + Math.random() * 900000)}"; // ex: 101214-483920
+    const orderId = `101214-${Math.floor(100000 + Math.random() * 900000)}`;
 
-    // ✅ Ajoute une notification
+    // Ajoute une notification
     notifDispatch({
       type: "ADD_NOTIFICATION",
       notification: {
         id: Date.now().toString(),
-        title: "Order confirmed ✅",
-        message:
-          "Your order ${orderId} has been confirmed. Total paid: $${total}.",
+        title: "Order confirmed",
+        message: `Your order ${orderId} has been confirmed. Total paid: $${total}.`,
         date: new Date().toISOString(),
       },
     });
 
-    // ✅ Vide le panier
+    // Vide le panier
     dispatch({ type: "CLEAR" });
 
     // ✅ Va à la page confirmation
@@ -588,7 +587,7 @@ function PaymentScreen({ route }) {
     >
       <View style={styles.controlHeader}>
         <Text style={styles.controlTitle}>Visa Checkout</Text>
-        <Text style={styles.paySubtitle}>Secure payment • Demo form</Text>
+        <Text style={styles.paySubtitle}>Secure payment</Text>
       </View>
 
       {/* Carte visuelle */}
@@ -715,6 +714,54 @@ function PaymentScreen({ route }) {
             textColor={theme.colors.text}
           >
             Back to cart
+          </Button>
+        </Card.Content>
+      </Card>
+    </ScrollView>
+  );
+}
+
+function OrderConfirmationScreen({ route }) {
+  const { orderId, total } = route?.params ?? { orderId: "N/A", total: 0 };
+
+  return (
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={{ paddingBottom: 28 }}
+    >
+      <View style={styles.controlHeader}>
+        <Text style={styles.controlTitle}>Order confirmed ✅</Text>
+        <Text style={styles.paySubtitle}>Thank you for your purchase.</Text>
+      </View>
+
+      <Card style={styles.detailsCard} mode="contained">
+        <Card.Content>
+          <Text style={styles.detailsSectionTitle}>Order number</Text>
+          <Text style={styles.detailsText}>{orderId}</Text>
+
+          <View style={{ height: 14 }} />
+
+          <Text style={styles.detailsSectionTitle}>Paid total</Text>
+          <Text
+            style={[
+              styles.detailsText,
+              { fontWeight: "900", color: "#6CF0FF" },
+            ]}
+          >
+            ${total}
+          </Text>
+
+          <View style={{ height: 18 }} />
+
+          <Button
+            mode="contained"
+            style={{ borderRadius: 16, backgroundColor: "#5B6CFF" }}
+            contentStyle={{ height: 52 }}
+            onPress={() =>
+              navigationRef.isReady() && navigationRef.navigate("Home")
+            }
+          >
+            Continue shopping
           </Button>
         </Card.Content>
       </Card>
@@ -992,7 +1039,42 @@ function NotificationsScreen() {
               </Card.Content>
             </Card>
           ))}
+          <ScrollView
+            style={styles.screen}
+            contentContainerStyle={{ paddingBottom: 30 }}
+          >
+            <Text style={styles.controlTitle}>Notifications</Text>
 
+            {notifState.items.length === 0 ? (
+              <View style={styles.simpleCard}>
+                <Text style={styles.cardSub}>No notifications.</Text>
+              </View>
+            ) : (
+              <>
+                {notifState.items.map((n) => (
+                  <Card key={n.id} style={styles.cartItemCard} mode="contained">
+                    <Card.Content>
+                      <Text style={styles.cardTitle}>{n.title}</Text>
+                      <Text style={styles.cardSub}>{n.message}</Text>
+                    </Card.Content>
+                  </Card>
+                ))}
+
+                <Button
+                  mode="outlined"
+                  style={{
+                    marginTop: 12,
+                    borderRadius: 16,
+                    borderColor: "rgba(255,255,255,0.25)",
+                  }}
+                  textColor={theme.colors.text}
+                  onPress={() => notifDispatch({ type: "CLEAR_NOTIFICATIONS" })}
+                >
+                  Clear notifications
+                </Button>
+              </>
+            )}
+          </ScrollView>
           <Button
             mode="outlined"
             style={{
@@ -1212,6 +1294,22 @@ function notificationsReducer(state, action) {
   }
 }
 
+function notificationsReducer(state, action) {
+  switch (action.type) {
+    case "ADD_NOTIFICATION": {
+      return {
+        ...state,
+        items: [action.notification, ...state.items],
+      };
+    }
+    case "CLEAR_NOTIFICATIONS": {
+      return { ...state, items: [] };
+    }
+    default:
+      return state;
+  }
+}
+
 function cartReducer(state, action) {
   switch (action.type) {
     case "ADD": {
@@ -1272,12 +1370,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#070A16",
     paddingHorizontal: 18,
-    paddingTop: 14,
+    paddingTop: 6,
   },
 
   appbarHeader: {
     backgroundColor: "#070A16",
     elevation: 0,
+    paddingBottom: 6,
   },
   appbarLeft: {
     flexDirection: "row",
@@ -1306,8 +1405,8 @@ const styles = StyleSheet.create({
   // HOME
   brandBlock: {
     alignItems: "center",
-    marginTop: 6,
-    marginBottom: 14,
+    marginTop: 4,
+    marginBottom: 6,
   },
   brandLogo: {
     width: 210,
@@ -1748,8 +1847,8 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     padding: 16,
     backgroundColor: "rgba(91,108,255,0.16)",
-    borderWidth: 1,
-    borderColor: "rgba(108,240,255,0.22)",
+    borderWidth: 0,
+    borderColor: "transparent",
     shadowColor: "#6CF0FF",
     shadowOpacity: 0.18,
     shadowRadius: 18,

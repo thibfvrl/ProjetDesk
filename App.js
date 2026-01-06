@@ -3,6 +3,7 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
+  Dimensions,
   Image,
   TouchableOpacity,
   StatusBar,
@@ -17,6 +18,11 @@ import {
   createNavigationContainerRef,
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+// Disable native screens to avoid passing iOS-specific detent strings
+// (some Expo runtimes/native versions may not accept values like 'large')
+import { enableScreens } from "react-native-screens";
+enableScreens(false);
 
 const navigationRef = createNavigationContainerRef();
 const Tab = createBottomTabNavigator();
@@ -762,13 +768,6 @@ export default function App() {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-
-              <View style={styles.brandTitleWrap}>
-                <Text style={styles.brandTitleMain}>10 12 14</Text>
-                <View style={styles.brandBadge}>
-                  <Text style={styles.brandBadgeText}>DESK</Text>
-                </View>
-              </View>
             </View>
 
             <View style={styles.appbarRight}>
@@ -983,8 +982,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   appLogo: {
-    width: 36,
-    height: 36,
+    width: 50,
+    height: 50,
     marginLeft: 6,
   },
   logoButton: {
@@ -1220,13 +1219,12 @@ const styles = StyleSheet.create({
   },
 
   grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: "column",
     gap: 12,
   },
 
   productCard: {
-    width: "48%",
+    width: "100%",
     borderRadius: 20,
     padding: 14,
     backgroundColor: "rgba(255,255,255,0.04)",
@@ -1236,8 +1234,8 @@ const styles = StyleSheet.create({
   },
 
   productImageWrap: {
-    height: 700,
-    borderRadius: 16,
+    height: 300,
+    borderRadius: 12,
     overflow: "hidden",
     backgroundColor: "rgba(0,0,0,0.25)",
     borderWidth: 1,
@@ -1277,7 +1275,9 @@ const styles = StyleSheet.create({
 
   detailsImageWrap: {
     height: 320,
-    borderRadius: 18,
+    width: Dimensions.get("window").width,
+    marginLeft: -18,
+    borderRadius: 0,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.10)",

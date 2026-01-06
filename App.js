@@ -767,13 +767,6 @@ export default function App() {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-
-              <View style={styles.brandTitleWrap}>
-                <Text style={styles.brandTitleMain}>10 12 14</Text>
-                <View style={styles.brandBadge}>
-                  <Text style={styles.brandBadgeText}>DESK</Text>
-                </View>
-              </View>
             </View>
 
             <View style={styles.appbarRight}>
@@ -988,8 +981,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   appLogo: {
-    width: 36,
-    height: 36,
+    width: 50,
+    height: 50,
     marginLeft: 6,
   },
   logoButton: {

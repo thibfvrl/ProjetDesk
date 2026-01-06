@@ -575,7 +575,7 @@ function PaymentScreen({ route }) {
     // Vide le panier
     dispatch({ type: "CLEAR" });
 
-    // ✅ Va à la page confirmation
+    //  Va à la page confirmation
     navigationRef.isReady() &&
       navigationRef.navigate("OrderConfirmation", { orderId, total });
   };
@@ -730,55 +730,7 @@ function OrderConfirmationScreen({ route }) {
       contentContainerStyle={{ paddingBottom: 28 }}
     >
       <View style={styles.controlHeader}>
-        <Text style={styles.controlTitle}>Order confirmed ✅</Text>
-        <Text style={styles.paySubtitle}>Thank you for your purchase.</Text>
-      </View>
-
-      <Card style={styles.detailsCard} mode="contained">
-        <Card.Content>
-          <Text style={styles.detailsSectionTitle}>Order number</Text>
-          <Text style={styles.detailsText}>{orderId}</Text>
-
-          <View style={{ height: 14 }} />
-
-          <Text style={styles.detailsSectionTitle}>Paid total</Text>
-          <Text
-            style={[
-              styles.detailsText,
-              { fontWeight: "900", color: "#6CF0FF" },
-            ]}
-          >
-            ${total}
-          </Text>
-
-          <View style={{ height: 18 }} />
-
-          <Button
-            mode="contained"
-            style={{ borderRadius: 16, backgroundColor: "#5B6CFF" }}
-            contentStyle={{ height: 52 }}
-            onPress={() =>
-              navigationRef.isReady() && navigationRef.navigate("Home")
-            }
-          >
-            Continue shopping
-          </Button>
-        </Card.Content>
-      </Card>
-    </ScrollView>
-  );
-}
-
-function OrderConfirmationScreen({ route }) {
-  const { orderId, total } = route?.params ?? { orderId: "N/A", total: 0 };
-
-  return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={{ paddingBottom: 28 }}
-    >
-      <View style={styles.controlHeader}>
-        <Text style={styles.controlTitle}>Order confirmed ✅</Text>
+        <Text style={styles.controlTitle}>Order confirmed </Text>
         <Text style={styles.paySubtitle}>Thank you for your purchase.</Text>
       </View>
 
@@ -1039,42 +991,7 @@ function NotificationsScreen() {
               </Card.Content>
             </Card>
           ))}
-          <ScrollView
-            style={styles.screen}
-            contentContainerStyle={{ paddingBottom: 30 }}
-          >
-            <Text style={styles.controlTitle}>Notifications</Text>
 
-            {notifState.items.length === 0 ? (
-              <View style={styles.simpleCard}>
-                <Text style={styles.cardSub}>No notifications.</Text>
-              </View>
-            ) : (
-              <>
-                {notifState.items.map((n) => (
-                  <Card key={n.id} style={styles.cartItemCard} mode="contained">
-                    <Card.Content>
-                      <Text style={styles.cardTitle}>{n.title}</Text>
-                      <Text style={styles.cardSub}>{n.message}</Text>
-                    </Card.Content>
-                  </Card>
-                ))}
-
-                <Button
-                  mode="outlined"
-                  style={{
-                    marginTop: 12,
-                    borderRadius: 16,
-                    borderColor: "rgba(255,255,255,0.25)",
-                  }}
-                  textColor={theme.colors.text}
-                  onPress={() => notifDispatch({ type: "CLEAR_NOTIFICATIONS" })}
-                >
-                  Clear notifications
-                </Button>
-              </>
-            )}
-          </ScrollView>
           <Button
             mode="outlined"
             style={{
@@ -1277,22 +1194,6 @@ const AuthContext = React.createContext(null);
 const CartContext = React.createContext(null);
 
 const NotificationsContext = React.createContext(null);
-
-function notificationsReducer(state, action) {
-  switch (action.type) {
-    case "ADD_NOTIFICATION": {
-      return {
-        ...state,
-        items: [action.notification, ...state.items],
-      };
-    }
-    case "CLEAR_NOTIFICATIONS": {
-      return { ...state, items: [] };
-    }
-    default:
-      return state;
-  }
-}
 
 function notificationsReducer(state, action) {
   switch (action.type) {

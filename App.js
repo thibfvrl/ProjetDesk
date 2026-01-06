@@ -6,16 +6,9 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
+  ScrollView,
 } from "react-native";
 import theme from "./src/theme";
-import {
-  Provider as PaperProvider,
-  Appbar,
-  Text,
-  Button,
-  IconButton,
-  Card,
-} from "react-native-paper";
 
 import Slider from "@react-native-community/slider";
 
@@ -45,161 +38,169 @@ const deskImages = {
   oakProductivity: require("./assets/aok.png"),
 };
 
-import { ScrollView } from "react-native"; // <- ajoute ça en haut si pas déjà
+import {
+  Provider as PaperProvider,
+  Appbar,
+  Text,
+  Button,
+  IconButton,
+  Card,
+  TextInput,
+  HelperText,
+} from "react-native-paper";
 
 function HomeScreen() {
   const PRODUCTS = [
-  // --- GAMING
-  {
-    id: "g1",
-    category: "Gaming Desks",
-    name: "Neon Edge Gaming",
-    price: 299,
-    image: deskImages.neonEdge,
-    description:
-      "Designed for competitive gaming, Neon Edge Gaming combines a rigid steel frame with RGB-ready cable management and a large mousepad surface for fast movements.",
-    features: [
-      "RGB edge-ready cable routing",
-      "Carbon-textured top (scratch resistant)",
-      "Large 140cm surface for dual screens",
-      "Headset + cup holder included",
-      "Reinforced steel legs (zero wobble)",
-    ],
-  },
-  {
-    id: "g2",
-    category: "Gaming Desks",
-    name: "RGB Pro Arena",
-    price: 349,
-    image: deskImages.rgbPro,
-    description:
-      "A premium arena-style desk made for streamers: clean setup, hidden power strip zone, and a pro monitor riser to keep posture perfect.",
-    features: [
-      "Hidden power strip compartment",
-      "Monitor riser for ergonomic viewing",
-      "RGB ambience compatibility (LED strip slot)",
-      "Full cable-tray under the desk",
-      "Anti-slip feet + stability crossbar",
-    ],
-  },
-  {
-    id: "g3",
-    category: "Gaming Desks",
-    name: "Carbon Strike XL",
-    price: 399,
-    image: deskImages.carbonXL,
-    description:
-      "The XL model for intense setups: extra depth, heavy-duty frame and premium matte surface that reduces reflections for a cleaner look on stream.",
-    features: [
-      "XL depth for keyboard + mixer space",
-      "Matte anti-reflection surface",
-      "Heavy-duty frame (high load capacity)",
-      "Side hooks for backpack/controller",
-      "Cable grommets + under-tray routing",
-    ],
-  },
+    // --- GAMING
+    {
+      id: "g1",
+      category: "Gaming Desks",
+      name: "Neon Edge Gaming",
+      price: 299,
+      image: deskImages.neonEdge,
+      description:
+        "Designed for competitive gaming, Neon Edge Gaming combines a rigid steel frame with RGB-ready cable management and a large mousepad surface for fast movements.",
+      features: [
+        "RGB edge-ready cable routing",
+        "Carbon-textured top (scratch resistant)",
+        "Large 140cm surface for dual screens",
+        "Headset + cup holder included",
+        "Reinforced steel legs (zero wobble)",
+      ],
+    },
+    {
+      id: "g2",
+      category: "Gaming Desks",
+      name: "RGB Pro Arena",
+      price: 349,
+      image: deskImages.rgbPro,
+      description:
+        "A premium arena-style desk made for streamers: clean setup, hidden power strip zone, and a pro monitor riser to keep posture perfect.",
+      features: [
+        "Hidden power strip compartment",
+        "Monitor riser for ergonomic viewing",
+        "RGB ambience compatibility (LED strip slot)",
+        "Full cable-tray under the desk",
+        "Anti-slip feet + stability crossbar",
+      ],
+    },
+    {
+      id: "g3",
+      category: "Gaming Desks",
+      name: "Carbon Strike XL",
+      price: 399,
+      image: deskImages.carbonXL,
+      description:
+        "The XL model for intense setups: extra depth, heavy-duty frame and premium matte surface that reduces reflections for a cleaner look on stream.",
+      features: [
+        "XL depth for keyboard + mixer space",
+        "Matte anti-reflection surface",
+        "Heavy-duty frame (high load capacity)",
+        "Side hooks for backpack/controller",
+        "Cable grommets + under-tray routing",
+      ],
+    },
 
-  // --- ART DECO
-  {
-    id: "a1",
-    category: "Art Deco Desks",
-    name: "Brass & Walnut Deco",
-    price: 459,
-    image: deskImages.brassWalnut,
-    description:
-      "A timeless Art Deco desk mixing walnut wood and brass accents. Perfect for elegant interiors and creative work with a warm atmosphere.",
-    features: [
-      "Walnut finish with brass detailing",
-      "Soft-close drawer for accessories",
-      "Rounded corners (premium feel)",
-      "Stain-resistant protective coating",
-      "Designed for warm ambient lighting",
-    ],
-  },
-  {
-    id: "a2",
-    category: "Art Deco Desks",
-    name: "Velvet Line Deco",
-    price: 499,
-    image: deskImages.velvetLine,
-    description:
-      "Velvet Line Deco is made for stylish offices: refined lines, gold touches and a smooth surface ideal for writing, sketching and laptop work.",
-    features: [
-      "Art Deco lines with gold accents",
-      "Smooth writing-friendly top",
-      "Compact but spacious layout",
-      "Hidden cable hole (rear)",
-      "Premium finish (easy to clean)",
-    ],
-  },
-  {
-    id: "a3",
-    category: "Art Deco Desks",
-    name: "Marble Glow Deco",
-    price: 549,
-    image: deskImages.marbleGlow,
-    description:
-      "Luxury look with marble effect and a clean gold frame. Designed to elevate any room while staying practical for everyday productivity.",
-    features: [
-      "Marble-effect top (premium look)",
-      "Gold frame with anti-rust finish",
-      "Easy-clean surface",
-      "Stable structure with cross support",
-      "Ideal for minimalist luxury setups",
-    ],
-  },
+    // --- ART DECO
+    {
+      id: "a1",
+      category: "Art Deco Desks",
+      name: "Brass & Walnut Deco",
+      price: 459,
+      image: deskImages.brassWalnut,
+      description:
+        "A timeless Art Deco desk mixing walnut wood and brass accents. Perfect for elegant interiors and creative work with a warm atmosphere.",
+      features: [
+        "Walnut finish with brass detailing",
+        "Soft-close drawer for accessories",
+        "Rounded corners (premium feel)",
+        "Stain-resistant protective coating",
+        "Designed for warm ambient lighting",
+      ],
+    },
+    {
+      id: "a2",
+      category: "Art Deco Desks",
+      name: "Velvet Line Deco",
+      price: 499,
+      image: deskImages.velvetLine,
+      description:
+        "Velvet Line Deco is made for stylish offices: refined lines, gold touches and a smooth surface ideal for writing, sketching and laptop work.",
+      features: [
+        "Art Deco lines with gold accents",
+        "Smooth writing-friendly top",
+        "Compact but spacious layout",
+        "Hidden cable hole (rear)",
+        "Premium finish (easy to clean)",
+      ],
+    },
+    {
+      id: "a3",
+      category: "Art Deco Desks",
+      name: "Marble Glow Deco",
+      price: 549,
+      image: deskImages.marbleGlow,
+      description:
+        "Luxury look with marble effect and a clean gold frame. Designed to elevate any room while staying practical for everyday productivity.",
+      features: [
+        "Marble-effect top (premium look)",
+        "Gold frame with anti-rust finish",
+        "Easy-clean surface",
+        "Stable structure with cross support",
+        "Ideal for minimalist luxury setups",
+      ],
+    },
 
-  // --- WORK
-  {
-    id: "w1",
-    category: "Work Desks",
-    name: "Minimal Work Station",
-    price: 279,
-    image: deskImages.minimalWork,
-    description:
-      "A simple and efficient workstation with clean design. Perfect for daily study/work with enough space for monitor + laptop.",
-    features: [
-      "Minimal design (clean workspace)",
-      "Compact footprint for small rooms",
-      "Cable hole for clean setup",
-      "Durable laminated top",
-      "Fast assembly system",
-    ],
-  },
-  {
-    id: "w2",
-    category: "Work Desks",
-    name: "Ergo Standing Desk",
-    price: 369,
-    image: deskImages.ergoStanding,
-    description:
-      "Ergonomic standing desk built for comfort and health. Adjust your posture throughout the day and reduce back strain.",
-    features: [
-      "Height-adjustable system",
-      "Sturdy legs (anti-wobble)",
-      "Cable management channel",
-      "Smooth edges for comfort",
-      "Ideal for long work sessions",
-    ],
-  },
-  {
-    id: "w3",
-    category: "Work Desks",
-    name: "Oak Productivity Pro",
-    price: 329,
-    image: deskImages.oakProductivity,
-    description:
-      "Oak Productivity Pro balances warmth and efficiency with built-in drawers and a clean surface for focused work.",
-    features: [
-      "Oak finish for warm workspace",
-      "Integrated storage drawers",
-      "Large surface for notebook + monitor",
-      "Scratch-resistant top",
-      "Stable base for daily use",
-    ],
-  },
-];
-
+    // --- WORK
+    {
+      id: "w1",
+      category: "Work Desks",
+      name: "Minimal Work Station",
+      price: 279,
+      image: deskImages.minimalWork,
+      description:
+        "A simple and efficient workstation with clean design. Perfect for daily study/work with enough space for monitor + laptop.",
+      features: [
+        "Minimal design (clean workspace)",
+        "Compact footprint for small rooms",
+        "Cable hole for clean setup",
+        "Durable laminated top",
+        "Fast assembly system",
+      ],
+    },
+    {
+      id: "w2",
+      category: "Work Desks",
+      name: "Ergo Standing Desk",
+      price: 369,
+      image: deskImages.ergoStanding,
+      description:
+        "Ergonomic standing desk built for comfort and health. Adjust your posture throughout the day and reduce back strain.",
+      features: [
+        "Height-adjustable system",
+        "Sturdy legs (anti-wobble)",
+        "Cable management channel",
+        "Smooth edges for comfort",
+        "Ideal for long work sessions",
+      ],
+    },
+    {
+      id: "w3",
+      category: "Work Desks",
+      name: "Oak Productivity Pro",
+      price: 329,
+      image: deskImages.oakProductivity,
+      description:
+        "Oak Productivity Pro balances warmth and efficiency with built-in drawers and a clean surface for focused work.",
+      features: [
+        "Oak finish for warm workspace",
+        "Integrated storage drawers",
+        "Large surface for notebook + monitor",
+        "Scratch-resistant top",
+        "Stable base for daily use",
+      ],
+    },
+  ];
 
   const grouped = React.useMemo(() => {
     const map = new Map();
@@ -218,7 +219,6 @@ function HomeScreen() {
           style={styles.productImage}
           resizeMode="cover"
         />
-
       </View>
 
       <Text style={styles.productName}>{item.name}</Text>
@@ -401,12 +401,15 @@ function CartScreen() {
   );
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: 30 }}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={{ paddingBottom: 30 }}
+    >
       <Text style={styles.controlTitle}>Cart</Text>
 
       {lines.length === 0 ? (
         <View style={styles.simpleCard}>
-          <Text style={styles.cardSub}>Votre panier est vide.</Text>
+          <Text style={styles.cardSub}>Your cart is empty.</Text>
           <Button
             mode="contained"
             onPress={() =>
@@ -414,7 +417,7 @@ function CartScreen() {
             }
             style={{ marginTop: 14 }}
           >
-            Retour à l'accueil
+            Go Home
           </Button>
         </View>
       ) : (
@@ -453,9 +456,7 @@ function CartScreen() {
                   </View>
                 </View>
 
-                <Text style={styles.lineTotal}>
-                  ${product.price * qty}
-                </Text>
+                <Text style={styles.lineTotal}>${product.price * qty}</Text>
               </Card.Content>
             </Card>
           ))}
@@ -469,20 +470,30 @@ function CartScreen() {
 
               <Button
                 mode="contained"
-                style={{ marginTop: 12, borderRadius: 16, backgroundColor: "#5B6CFF" }}
+                style={{
+                  marginTop: 12,
+                  borderRadius: 16,
+                  backgroundColor: "#5B6CFF",
+                }}
                 contentStyle={{ height: 52 }}
-                onPress={() => alert("Paiement (démo)")}
+                onPress={() =>
+                  navigationRef.isReady() &&
+                  navigationRef.navigate("Payment", { total })
+                }
               >
                 Checkout
               </Button>
-
               <Button
                 mode="outlined"
-                style={{ marginTop: 10, borderRadius: 16, borderColor: "rgba(255,255,255,0.25)" }}
+                style={{
+                  marginTop: 10,
+                  borderRadius: 16,
+                  borderColor: "rgba(255,255,255,0.25)",
+                }}
                 textColor={theme.colors.text}
                 onPress={() => dispatch({ type: "CLEAR" })}
               >
-                Vider le panier
+                Clear cart
               </Button>
             </Card.Content>
           </Card>
@@ -492,6 +503,197 @@ function CartScreen() {
   );
 }
 
+function PaymentScreen({ route }) {
+  const total = route?.params?.total ?? 0;
+
+  const [name, setName] = React.useState("");
+  const [card, setCard] = React.useState("");
+  const [expiry, setExpiry] = React.useState("");
+  const [cvc, setCvc] = React.useState("");
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const digitsOnly = (s) => (s || "").replace(/\D/g, "");
+
+  const formatCard = (value) => {
+    const d = digitsOnly(value).slice(0, 16);
+    return d.replace(/(.{4})/g, "$1 ").trim();
+  };
+
+  const formatExpiry = (value) => {
+    const d = digitsOnly(value).slice(0, 4);
+    if (d.length <= 2) return d;
+    return `${d.slice(0, 2)}/${d.slice(2)}`;
+  };
+
+  const isValidCard = digitsOnly(card).length === 16;
+  const isValidName = name.trim().length >= 3;
+
+  const isValidExpiry = (() => {
+    const v = expiry.trim();
+    if (!/^\d{2}\/\d{2}$/.test(v)) return false;
+    const [mmStr, yyStr] = v.split("/");
+    const mm = parseInt(mmStr, 10);
+    const yy = parseInt(yyStr, 10);
+    if (mm < 1 || mm > 12) return false;
+    // validation simple: date pas trop absurde
+    if (yy < 0 || yy > 99) return false;
+    return true;
+  })();
+
+  const isValidCvc = (() => {
+    const d = digitsOnly(cvc);
+    return d.length === 3 || d.length === 4;
+  })();
+
+  const canPay = isValidName && isValidCard && isValidExpiry && isValidCvc;
+
+  const onPay = () => {
+    setSubmitted(true);
+    if (!canPay) return;
+    // Démo : on "valide" et on retourne au panier (ou Home)
+    alert("Payment successful (demo) ✅");
+    navigationRef.isReady() && navigationRef.navigate("Home");
+  };
+
+  return (
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={{ paddingBottom: 28 }}
+    >
+      <View style={styles.controlHeader}>
+        <Text style={styles.controlTitle}>Visa Checkout</Text>
+        <Text style={styles.paySubtitle}>Secure payment • Demo form</Text>
+      </View>
+
+      {/* Carte visuelle */}
+      <View style={styles.visaCard}>
+        <View style={styles.visaCardTop}>
+          <Text style={styles.visaChip}>◼︎◼︎</Text>
+          <Text style={styles.visaBrand}>VISA</Text>
+        </View>
+
+        <Text style={styles.visaNumberPreview}>
+          {formatCard(card) || "•••• •••• •••• ••••"}
+        </Text>
+
+        <View style={styles.visaCardBottom}>
+          <View>
+            <Text style={styles.visaLabel}>CARDHOLDER</Text>
+            <Text style={styles.visaValue}>{name.trim() || "YOUR NAME"}</Text>
+          </View>
+          <View>
+            <Text style={styles.visaLabel}>EXPIRES</Text>
+            <Text style={styles.visaValue}>{expiry || "MM/YY"}</Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Form */}
+      <Card style={styles.detailsCard} mode="contained">
+        <Card.Content>
+          <Text style={styles.detailsSectionTitle}>Card details</Text>
+
+          <TextInput
+            mode="outlined"
+            label="Cardholder name"
+            value={name}
+            onChangeText={setName}
+            style={styles.payInput}
+            textColor="white"
+            outlineColor="rgba(255,255,255,0.18)"
+            activeOutlineColor="#6CF0FF"
+          />
+          <HelperText type="error" visible={submitted && !isValidName}>
+            Enter a valid name.
+          </HelperText>
+
+          <TextInput
+            mode="outlined"
+            label="Card number"
+            keyboardType="number-pad"
+            value={card}
+            onChangeText={(v) => setCard(formatCard(v))}
+            style={styles.payInput}
+            textColor="white"
+            outlineColor="rgba(255,255,255,0.18)"
+            activeOutlineColor="#6CF0FF"
+            placeholder="1234 5678 9012 3456"
+          />
+          <HelperText type="error" visible={submitted && !isValidCard}>
+            Card number must be 16 digits.
+          </HelperText>
+
+          <View style={styles.payRow}>
+            <View style={{ flex: 1 }}>
+              <TextInput
+                mode="outlined"
+                label="Expiry (MM/YY)"
+                keyboardType="number-pad"
+                value={expiry}
+                onChangeText={(v) => setExpiry(formatExpiry(v))}
+                style={styles.payInput}
+                textColor="white"
+                outlineColor="rgba(255,255,255,0.18)"
+                activeOutlineColor="#6CF0FF"
+                placeholder="MM/YY"
+              />
+              <HelperText type="error" visible={submitted && !isValidExpiry}>
+                Use MM/YY (ex: 09/27).
+              </HelperText>
+            </View>
+
+            <View style={{ width: 12 }} />
+
+            <View style={{ width: 120 }}>
+              <TextInput
+                mode="outlined"
+                label="CVC"
+                keyboardType="number-pad"
+                value={cvc}
+                onChangeText={(v) => setCvc(digitsOnly(v).slice(0, 4))}
+                style={styles.payInput}
+                textColor="white"
+                outlineColor="rgba(255,255,255,0.18)"
+                activeOutlineColor="#6CF0FF"
+                placeholder="123"
+              />
+              <HelperText type="error" visible={submitted && !isValidCvc}>
+                3–4 digits.
+              </HelperText>
+            </View>
+          </View>
+
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Total</Text>
+            <Text style={styles.summaryValue}>${total}</Text>
+          </View>
+
+          <Button
+            mode="contained"
+            onPress={onPay}
+            disabled={!canPay}
+            style={[styles.payButton, { opacity: canPay ? 1 : 0.55 }]}
+            contentStyle={{ height: 54 }}
+            labelStyle={{ fontWeight: "900", letterSpacing: 1.2 }}
+          >
+            PAY NOW
+          </Button>
+
+          <Button
+            mode="outlined"
+            onPress={() =>
+              navigationRef.isReady() && navigationRef.navigate("Cart")
+            }
+            style={styles.payBackBtn}
+            textColor={theme.colors.text}
+          >
+            Back to cart
+          </Button>
+        </Card.Content>
+      </Card>
+    </ScrollView>
+  );
+}
 
 function AccountScreen() {
   return (
@@ -622,13 +824,20 @@ export default function App() {
               <Tab.Screen name="DeskControl" component={DeskControlScreen} />
               <Tab.Screen name="Cart" component={CartScreen} />
               <Tab.Screen name="Account" component={AccountScreen} />
-              <Tab.Screen name="Notifications" component={NotificationsScreen} />
-              <Tab.Screen name="ProductDetails" component={ProductDetailsScreen} />
+              <Tab.Screen
+                name="Notifications"
+                component={NotificationsScreen}
+              />
+              <Tab.Screen
+                name="ProductDetails"
+                component={ProductDetailsScreen}
+              />
+              <Tab.Screen name="Payment" component={PaymentScreen} />
             </Tab.Navigator>
           </NavigationContainer>
         </SafeAreaView>
       </PaperProvider>
-      </CartContext.Provider>
+    </CartContext.Provider>
   );
 }
 
@@ -637,9 +846,16 @@ function ProductDetailsScreen({ route }) {
   const { dispatch } = React.useContext(CartContext);
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: 30 }}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={{ paddingBottom: 30 }}
+    >
       <View style={styles.detailsImageWrap}>
-        <Image source={product.image} style={styles.detailsImage} resizeMode="cover" />
+        <Image
+          source={product.image}
+          style={styles.detailsImage}
+          resizeMode="cover"
+        />
       </View>
 
       <Text style={styles.detailsTitle}>{product.name}</Text>
@@ -673,12 +889,17 @@ function ProductDetailsScreen({ route }) {
         Add to Cart
       </Button>
 
-
       <Button
         mode="outlined"
-        style={{ marginTop: 10, borderRadius: 16, borderColor: "rgba(255,255,255,0.25)" }}
+        style={{
+          marginTop: 10,
+          borderRadius: 16,
+          borderColor: "rgba(255,255,255,0.25)",
+        }}
         textColor={theme.colors.text}
-        onPress={() => navigationRef.isReady() && navigationRef.navigate("Home")}
+        onPress={() =>
+          navigationRef.isReady() && navigationRef.navigate("Home")
+        }
       >
         Back to Shop
       </Button>
@@ -1017,7 +1238,6 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
 
-
   productImageWrap: {
     height: 700,
     borderRadius: 16,
@@ -1058,159 +1278,247 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
 
-detailsImageWrap: {
-  height: 320,
-  borderRadius: 18,
-  overflow: "hidden",
-  borderWidth: 1,
-  borderColor: "rgba(255,255,255,0.10)",
-  backgroundColor: "rgba(0,0,0,0.25)",
-},
+  detailsImageWrap: {
+    height: 320,
+    borderRadius: 18,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.10)",
+    backgroundColor: "rgba(0,0,0,0.25)",
+  },
 
-detailsImage: {
-  width: "100%",
-  height: "100%",
-},
+  detailsImage: {
+    width: "100%",
+    height: "100%",
+  },
 
-detailsTitle: {
-  marginTop: 14,
-  color: "rgba(255,255,255,0.95)",
-  fontSize: 26,
-  fontWeight: "900",
-},
+  detailsTitle: {
+    marginTop: 14,
+    color: "rgba(255,255,255,0.95)",
+    fontSize: 26,
+    fontWeight: "900",
+  },
 
-detailsPrice: {
-  marginTop: 6,
-  color: "#FF4FD8",
-  fontSize: 22,
-  fontWeight: "900",
-  marginBottom: 12,
-},
+  detailsPrice: {
+    marginTop: 6,
+    color: "#FF4FD8",
+    fontSize: 22,
+    fontWeight: "900",
+    marginBottom: 12,
+  },
 
-detailsCard: {
-  borderRadius: 18,
-  backgroundColor: "rgba(255,255,255,0.04)",
-  borderWidth: 1,
-  borderColor: "rgba(120, 220, 255, 0.18)",
-},
+  detailsCard: {
+    borderRadius: 18,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(120, 220, 255, 0.18)",
+  },
 
-detailsSectionTitle: {
-  color: "#6CF0FF",
-  fontSize: 16,
-  fontWeight: "900",
-  marginBottom: 6,
-},
+  detailsSectionTitle: {
+    color: "#6CF0FF",
+    fontSize: 16,
+    fontWeight: "900",
+    marginBottom: 6,
+  },
 
-detailsText: {
-  color: "rgba(255,255,255,0.70)",
-  fontSize: 14,
-  lineHeight: 20,
-},
+  detailsText: {
+    color: "rgba(255,255,255,0.70)",
+    fontSize: 14,
+    lineHeight: 20,
+  },
 
-featureRow: {
-  flexDirection: "row",
-  alignItems: "flex-start",
-  marginTop: 8,
-},
+  featureRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginTop: 8,
+  },
 
-featureBullet: {
-  color: "#A98CFF",
-  fontSize: 16,
-  fontWeight: "900",
-  width: 18,
-  marginTop: -1,
-},
+  featureBullet: {
+    color: "#A98CFF",
+    fontSize: 16,
+    fontWeight: "900",
+    width: 18,
+    marginTop: -1,
+  },
 
-featureText: {
-  flex: 1,
-  color: "rgba(255,255,255,0.80)",
-  fontSize: 14,
-  lineHeight: 20,
-},
+  featureText: {
+    flex: 1,
+    color: "rgba(255,255,255,0.80)",
+    fontSize: 14,
+    lineHeight: 20,
+  },
 
-cartItemCard: {
-  marginTop: 12,
-  borderRadius: 18,
-  backgroundColor: "rgba(255,255,255,0.04)",
-  borderWidth: 1,
-  borderColor: "rgba(120, 220, 255, 0.18)",
-},
+  cartItemCard: {
+    marginTop: 12,
+    borderRadius: 18,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(120, 220, 255, 0.18)",
+  },
 
-cartItemRow: {
-  flexDirection: "row",
-  gap: 12,
-  alignItems: "center",
-},
+  cartItemRow: {
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+  },
 
-cartThumb: {
-  width: 70,
-  height: 70,
-  borderRadius: 14,
-  borderWidth: 1,
-  borderColor: "rgba(255,255,255,0.10)",
-},
+  cartThumb: {
+    width: 70,
+    height: 70,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.10)",
+  },
 
-cartName: {
-  color: "rgba(255,255,255,0.92)",
-  fontWeight: "900",
-  fontSize: 14,
-},
+  cartName: {
+    color: "rgba(255,255,255,0.92)",
+    fontWeight: "900",
+    fontSize: 14,
+  },
 
-cartPrice: {
-  color: "#FF4FD8",
-  fontWeight: "900",
-  marginTop: 4,
-},
+  cartPrice: {
+    color: "#FF4FD8",
+    fontWeight: "900",
+    marginTop: 4,
+  },
 
-cartQtyRow: {
-  flexDirection: "row",
-  alignItems: "center",
-  gap: 10,
-  marginTop: 10,
-},
+  cartQtyRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 10,
+  },
 
-qtyBtn: {
-  borderRadius: 12,
-  borderColor: "rgba(255,255,255,0.25)",
-},
+  qtyBtn: {
+    borderRadius: 12,
+    borderColor: "rgba(255,255,255,0.25)",
+  },
 
-qtyText: {
-  color: "rgba(255,255,255,0.9)",
-  fontWeight: "900",
-  minWidth: 18,
-  textAlign: "center",
-},
+  qtyText: {
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "900",
+    minWidth: 18,
+    textAlign: "center",
+  },
 
-lineTotal: {
-  color: "#6CF0FF",
-  fontWeight: "900",
-  marginLeft: 6,
-},
+  lineTotal: {
+    color: "#6CF0FF",
+    fontWeight: "900",
+    marginLeft: 6,
+  },
 
-cartSummaryCard: {
-  marginTop: 14,
-  borderRadius: 18,
-  backgroundColor: "rgba(255,255,255,0.04)",
-  borderWidth: 1,
-  borderColor: "rgba(120, 220, 255, 0.18)",
-},
+  cartSummaryCard: {
+    marginTop: 14,
+    borderRadius: 18,
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(120, 220, 255, 0.18)",
+  },
 
-summaryRow: {
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-},
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 
-summaryLabel: {
-  color: "rgba(255,255,255,0.7)",
-  fontWeight: "900",
-  fontSize: 14,
-},
+  summaryLabel: {
+    color: "rgba(255,255,255,0.7)",
+    fontWeight: "900",
+    fontSize: 14,
+  },
 
-summaryValue: {
-  color: "#6CF0FF",
-  fontWeight: "900",
-  fontSize: 18,
-},
+  summaryValue: {
+    color: "#6CF0FF",
+    fontWeight: "900",
+    fontSize: 18,
+  },
 
+  paySubtitle: {
+    marginTop: 6,
+    color: "rgba(255,255,255,0.60)",
+    fontWeight: "700",
+  },
+
+  visaCard: {
+    marginTop: 10,
+    borderRadius: 22,
+    padding: 16,
+    backgroundColor: "rgba(91,108,255,0.16)",
+    borderWidth: 1,
+    borderColor: "rgba(108,240,255,0.22)",
+    shadowColor: "#6CF0FF",
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 3,
+  },
+
+  visaCardTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  visaChip: {
+    color: "rgba(255,255,255,0.7)",
+    fontWeight: "900",
+    letterSpacing: 2,
+  },
+
+  visaBrand: {
+    color: "#6CF0FF",
+    fontWeight: "900",
+    letterSpacing: 2,
+    fontSize: 16,
+  },
+
+  visaNumberPreview: {
+    marginTop: 18,
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 18,
+    fontWeight: "900",
+    letterSpacing: 2,
+  },
+
+  visaCardBottom: {
+    marginTop: 18,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  visaLabel: {
+    color: "rgba(255,255,255,0.55)",
+    fontWeight: "900",
+    fontSize: 10,
+    letterSpacing: 1.2,
+  },
+
+  visaValue: {
+    marginTop: 4,
+    color: "rgba(255,255,255,0.90)",
+    fontWeight: "900",
+    fontSize: 12,
+    letterSpacing: 1,
+  },
+
+  payInput: {
+    marginTop: 12,
+    backgroundColor: "rgba(0,0,0,0.18)",
+  },
+
+  payRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+
+  payButton: {
+    marginTop: 14,
+    borderRadius: 16,
+    backgroundColor: "#5B6CFF",
+  },
+
+  payBackBtn: {
+    marginTop: 10,
+    borderRadius: 16,
+    borderColor: "rgba(255,255,255,0.25)",
+  },
 });

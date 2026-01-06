@@ -3,6 +3,7 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
+  Dimensions,
   Image,
   TouchableOpacity,
   StatusBar,
@@ -1224,13 +1225,12 @@ const styles = StyleSheet.create({
   },
 
   grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: "column",
     gap: 12,
   },
 
   productCard: {
-    width: "48%",
+    width: "100%",
     borderRadius: 20,
     padding: 14,
     backgroundColor: "rgba(255,255,255,0.04)",
@@ -1240,8 +1240,8 @@ const styles = StyleSheet.create({
   },
 
   productImageWrap: {
-    height: 700,
-    borderRadius: 16,
+    height: 300,
+    borderRadius: 12,
     overflow: "hidden",
     backgroundColor: "rgba(0,0,0,0.25)",
     borderWidth: 1,
@@ -1281,7 +1281,9 @@ const styles = StyleSheet.create({
 
   detailsImageWrap: {
     height: 320,
-    borderRadius: 18,
+    width: Dimensions.get("window").width,
+    marginLeft: -18,
+    borderRadius: 0,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.10)",

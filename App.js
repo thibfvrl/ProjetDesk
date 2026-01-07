@@ -543,6 +543,7 @@ function CartScreen() {
 
 function PaymentScreen({ route }) {
   const total = route?.params?.total ?? 0;
+
   const { dispatch } = React.useContext(CartContext);
   const { notifDispatch } = React.useContext(NotificationsContext);
 
@@ -607,7 +608,7 @@ function PaymentScreen({ route }) {
     // Vide le panier
     dispatch({ type: "CLEAR" });
 
-    // Va à la page confirmation
+    //  Va à la page confirmation
     navigationRef.isReady() &&
       navigationRef.navigate("OrderConfirmation", { orderId, total });
   };
@@ -762,7 +763,7 @@ function OrderConfirmationScreen({ route }) {
       contentContainerStyle={{ paddingBottom: 28 }}
     >
       <View style={styles.controlHeader}>
-        <Text style={styles.controlTitle}>Order confirmed ✅</Text>
+        <Text style={styles.controlTitle}>Order confirmed </Text>
         <Text style={styles.paySubtitle}>Thank you for your purchase.</Text>
       </View>
 
@@ -1048,6 +1049,9 @@ export default function App() {
   const [sortOrder, setSortOrder] = React.useState("NONE"); // NONE | ASC | DESC
   const [filterMenuVisible, setFilterMenuVisible] = React.useState(false);
   const [cartState, dispatch] = React.useReducer(cartReducer, { items: {} });
+
+  const [auth, setAuth] = React.useState({ user: null, registered: null });
+
   const [notifState, notifDispatch] = React.useReducer(notificationsReducer, {
     items: [],
   });
